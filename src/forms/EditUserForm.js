@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const AddUserForm = (props) => {
-  const initialFormState = {
-    id: null,
-    name: "",
-    username: "",
-    position: 0,
-    price: 0,
-  };
-  const [user, setUser] = useState(initialFormState);
+const EditUserForm = (props) => {
+  const [user, setUser] = useState(props.currentUser);
+
+  useEffect(() => {
+    setUser(props.currentUser);
+  }, [props]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -19,9 +16,7 @@ const AddUserForm = (props) => {
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        if (!user.name || !user.username) return;
-        props.addUser(user);
-        setUser(initialFormState);
+        props.updateUser(user.id, user);
       }}
     >
       <label>Name</label>
@@ -40,21 +35,27 @@ const AddUserForm = (props) => {
       />
       <label>Number of stocks</label>
       <input
-        type="number"
+        type="text"
         name="position"
         value={user.position}
         onChange={handleInputChange}
       />
       <label>Price of each stock</label>
       <input
-        type="number"
+        type="text"
         name="price"
         value={user.price}
         onChange={handleInputChange}
       />
-      <button>Add new stock</button>
+      <button>Update stock</button>
+      <button
+        onClick={() => props.setEditing(false)}
+        className="button muted-button"
+      >
+        Cancel
+      </button>
     </form>
   );
 };
 
-export default AddUserForm;
+export default EditUserForm;
